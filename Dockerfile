@@ -97,17 +97,10 @@ RUN apk add --no-cache \
 ########################################
 COPY dependencies/* /
 
-################################
-# Installs python dependencies #
-################################
-RUN npm config set package-lock true  \
-    && npm config set loglevel error \
-    && npm --no-cache install \
-    && npm audit fix --audit-level=critical \
-    ##############################
-    # Installs ruby dependencies #
-    ##############################
-    && bundle install
+##############################
+# Installs ruby dependencies #
+##############################
+RUN bundle install
 
 ##############################
 # Installs Perl dependencies #
