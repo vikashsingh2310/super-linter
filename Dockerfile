@@ -93,6 +93,11 @@ RUN apk add --no-cache \
 ########################################
 COPY dependencies/* /
 
+#############################
+# Install Node Dependencies #
+#############################
+RUN npm install
+
 ##############################
 # Installs ruby dependencies #
 ##############################
