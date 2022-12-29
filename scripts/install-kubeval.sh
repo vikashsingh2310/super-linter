@@ -24,7 +24,7 @@ apk add --no-cache glibc-${GLIBC_VERSION}.apk
 rm glibc-${GLIBC_VERSION}.apk
 wget --tries=5 -q https://storage.googleapis.com/dart-archive/channels/stable/release/${DART_VERSION}/sdk/dartsdk-linux-x64-release.zip
 unzip -q dartsdk-linux-x64-release.zip
-chmod +x dart-sdk/bin/dart*mv dart-sdk/bin/* /usr/bin/ && mv dart-sdk/lib/* /usr/lib/ && mv dart-sdk/include/* /usr/include/
+chmod +x dart-sdk/bin/dart* && mv dart-sdk/bin/* /usr/bin/ && mv dart-sdk/lib/* /usr/lib/ && mv dart-sdk/include/* /usr/include/
 rm -r dart-sdk/ dartsdk-linux-x64-release.zip
 
 ################################

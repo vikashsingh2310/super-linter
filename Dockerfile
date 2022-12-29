@@ -192,7 +192,8 @@ COPY --from=actionlint /usr/local/bin/actionlint /usr/bin/
 #################
 # Install Lintr #
 #################
-RUN ./install-lintr.sh
+COPY scripts/install-lintr.sh /
+RUN /install-lintr.sh && rm -rf /install-lintr.sh
 
 # Source: https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
 # Store the key here because the above host is sometimes down, and breaks our builds
@@ -201,13 +202,15 @@ COPY dependencies/sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
 ###################
 # Install Kubeval #
 ###################
-RUN ./install-kubeval.sh
+COPY scripts/install-kubeval.sh /
+RUN /install-kubeval.sh && rm -rf /install-kubeval.sh
 
 #################################################
 # Install Raku and additional Edge dependencies #
 #################################################
 # Basic setup, programs and init
-RUN ./install-raku.sh
+COPY scripts/install-raku.sh /
+RUN /install-raku.sh && rm -rf /install-raku.sh
 
 ################################################################################
 # Grab small clean image to build python packages ##############################
@@ -270,8 +273,8 @@ RUN apk add --no-cache bash git git-lfs
 ##############################
 # Install Phive dependencies #
 ##############################
-COPY dependencies/scripts/install-phive.sh /scripts/install-phive.sh
-RUN /scripts/install-phive.sh && rm -rf /scripts
+COPY scripts/install-phive.sh /
+RUN /install-phive.sh && rm -rf /install-phive.sh
 
 #################################
 # Copy the libraries into image #
@@ -371,21 +374,18 @@ ENV PATH="${PATH}:/var/cache/dotnet/tools:/usr/share/dotnet"
 #########################
 COPY --from=dotenv-linter /dotenv-linter /usr/bin/
 
-################
-# Copy Scripts #
-################
-COPY dependencies/scripts/* /scripts
-
 ###################################
 # Install DotNet and Dependencies #
 ###################################
-RUN /scripts/install-dotnet.sh
+COPY scripts/install-dotnet.sh /
+RUN /install-dotnet.sh && rm -rf /install-dotnet.sh
 
 ##############################
 # Install rustfmt & clippy   #
 ##############################
 ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-RUN /scripts/install-rustfmt.sh
+COPY scripts/install-rustfmt.sh /
+RUN /install-rustfmt.sh && rm -rf /install-rustfmt.sh
 
 #########################################
 # Install Powershell + PSScriptAnalyzer #
@@ -393,7 +393,8 @@ RUN /scripts/install-rustfmt.sh
 # Reference: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7
 # Slightly modified to always retrieve latest stable Powershell version
 # If changing PWSH_VERSION='latest' to a specific version, use format PWSH_VERSION='tags/v7.0.2'
-RUN /scripts/install-pwsh.sh
+COPY scripts/install-powershell.sh /
+RUN /install-pwsh.sh && rm -rf /install-pwsh.sh
 
 #############################################################
 # Install Azure Resource Manager Template Toolkit (arm-ttk) #
@@ -401,12 +402,8 @@ RUN /scripts/install-pwsh.sh
 # Depends on PowerShell
 # Reference https://github.com/Azure/arm-ttk
 # Reference https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/test-toolkit
-RUN /scripts/install-arm-ttk.sh
-
-##################
-# Delete Scripts #
-##################
-RUN rm -rf /scripts
+COPY scripts/install-arm-ttk.sh /
+RUN /install-arm-ttk.sh && rm -rf /install-arm-ttk.sh
 
 ########################################################################################
 # Run to build version file and validate image again because we installed more linters #
